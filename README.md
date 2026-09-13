@@ -20,7 +20,7 @@ loadings_df = ml_data_access.load_factor_loadings(db, start, end)
 chain_df = ml_data_access.load_option_greeks(db, "AAPL", dt.date(2025, 1, 1), dt.date(2025, 3, 31))
 ```
 
-Every loader is `load_x(db, start=None, end=None)` and returns a collected DataFrame for the inclusive window; the three per-symbol chain loaders take the symbol first. Nothing is screened, joined or derived: the store holds canonical tables (`symbol` is the option root, `right` is `C`/`P`, `iv` is null where the vendor's inversion failed, `vega` is per vol point).
+Every loader is `load_x(db, start=None, end=None)` and returns a collected DataFrame for the inclusive window; the three per-symbol chain loaders take the symbol first. Nothing is screened, joined or derived: the store holds canonical tables (`symbol` is the option root, `right` is `C`/`P`, `iv` is null where the vendor's inversion failed, `vega` is per vol point), followed by every other column the vendor delivered, so the store is the complete record.
 
 The frames slot straight into malatium:
 

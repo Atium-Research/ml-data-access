@@ -88,7 +88,8 @@ def load_earnings(
 def load_underlying(
     db: bl.Database, start: dt.date | None = None, end: dt.date | None = None
 ) -> pl.DataFrame:
-    """EOD stock OHLCV, 2023-06 on, `symbol` in option-root spelling."""
+    """EOD stock OHLCV with the vendor's quote columns, 2023-06 on, `symbol` in option-root
+    spelling. A delisted name's final row has a zero close; filter `close > 0` for returns."""
     return load_window(db, "underlying", start, end, ["date", "symbol"])
 
 
@@ -103,7 +104,9 @@ def load_option_greeks(
     db: bl.Database, symbol: str, start: dt.date | None = None, end: dt.date | None = None
 ) -> pl.DataFrame:
     """One name's EOD chain: quotes, `iv` (null where the inversion failed), greeks with
-    `vega` per vol point, and `underlying`, the spot the greeks were struck against."""
+    `vega` per vol point, `underlying` (the spot the greeks were struck against), then every
+    other column the vendor delivers: higher-order greeks, trade OHLC, quote sizes, the raw
+    `implied_vol` and `iv_error`, timestamps."""
     return load_chain(db, "option_greeks", symbol, start, end)
 
 
