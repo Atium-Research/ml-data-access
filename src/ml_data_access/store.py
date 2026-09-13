@@ -29,7 +29,7 @@ def connect(path: str | Path | None = None) -> bl.Database:
 
 def store_path() -> Path:
     if not bl.CONNECTED:
-        raise RuntimeError("not connected: call ml_data.connect() first")
+        raise RuntimeError("not connected: call ml_data_access.connect() first")
     return Path(bl.DATABASE_PATH)
 
 

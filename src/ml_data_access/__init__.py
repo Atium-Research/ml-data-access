@@ -1,10 +1,10 @@
 """Read side of the malatium data store.
 
-    import ml_data
+    import ml_data_access
 
-    db = ml_data.connect()
-    reference_df = ml_data.load_reference_returns(db, start, end)
-    chain_df = ml_data.load_option_greeks(db, "AAPL", start, end)
+    db = ml_data_access.connect()
+    reference_df = ml_data_access.load_reference_returns(db, start, end)
+    chain_df = ml_data_access.load_option_greeks(db, "AAPL", start, end)
 
 One `load_*` per table `ml-data-pipelines` writes, every one taking the
 database and an inclusive `[start, end]` window and returning a collected
@@ -13,7 +13,7 @@ canonical tables, and the two screens a multi-year study needs are named
 functions, `usable_symbol_years` and `in_universe`.
 """
 
-from ml_data.loaders import (
+from ml_data_access.loaders import (
     in_universe,
     load_calendar,
     load_corporate_actions,
@@ -41,7 +41,7 @@ from ml_data.loaders import (
     load_yields,
     usable_symbol_years,
 )
-from ml_data.store import (
+from ml_data_access.store import (
     available_symbols,
     available_years,
     connect,

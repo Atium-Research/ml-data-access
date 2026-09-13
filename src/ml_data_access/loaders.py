@@ -11,7 +11,7 @@ import datetime as dt
 import bear_lake as bl
 import polars as pl
 
-from ml_data.store import in_window, scan, years_in
+from ml_data_access.store import in_window, scan, years_in
 
 
 def load_window(

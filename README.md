@@ -1,23 +1,23 @@
-# ml-data
+# ml-data-access
 
 Read side of the malatium data store. One `load_*` per table that [ml-data-pipelines](https://github.com/Atium-Research/ml-data-pipelines) writes, over a [bear-lake](https://github.com/andrewhall1124/bear-lake) database, in the shape of `at-research`'s data helpers.
 
 ```bash
-pip install ml-data
+pip install ml-data-access
 ```
 
 ```python
 import datetime as dt
 
-import ml_data
+import ml_data_access
 
-db = ml_data.connect()  # ML_DATA_STORE, or connect(path)
+db = ml_data_access.connect()  # ML_DATA_STORE, or connect(path)
 start, end = dt.date(2018, 7, 2), dt.date(2025, 6, 30)
 
-reference_df = ml_data.load_reference_returns(db, start, end)
-scores_df = ml_data.load_signals(db, "vrp", start, end)
-loadings_df = ml_data.load_factor_loadings(db, start, end)
-chain_df = ml_data.load_option_greeks(db, "AAPL", dt.date(2025, 1, 1), dt.date(2025, 3, 31))
+reference_df = ml_data_access.load_reference_returns(db, start, end)
+scores_df = ml_data_access.load_signals(db, "vrp", start, end)
+loadings_df = ml_data_access.load_factor_loadings(db, start, end)
+chain_df = ml_data_access.load_option_greeks(db, "AAPL", dt.date(2025, 1, 1), dt.date(2025, 3, 31))
 ```
 
 Every loader is `load_x(db, start=None, end=None)` and returns a collected DataFrame for the inclusive window; the three per-symbol chain loaders take the symbol first. Nothing is screened, joined or derived: the store holds canonical tables (`symbol` is the option root, `right` is `C`/`P`, `iv` is null where the vendor's inversion failed, `vega` is per vol point).
@@ -27,7 +27,7 @@ The frames slot straight into malatium:
 ```python
 from malatium.providers import PanelProvider, TradingCalendar
 
-calendar = TradingCalendar(ml_data.load_sessions(db, start, end))
+calendar = TradingCalendar(ml_data_access.load_sessions(db, start, end))
 reference = PanelProvider(reference_df)
 scores = PanelProvider(scores_df)
 ```
@@ -50,7 +50,7 @@ scores = PanelProvider(scores_df)
 | `load_signals(db, name, ...)` | one signal's `(date, symbol, score)` |
 | `in_universe` | semi-join a `(date, symbol)` panel to membership |
 
-`ml_data.describe()` lists what the store holds. `ml_data.scan(name, years, symbols)` is the lazy scan under every loader; it opens only the partitions asked for, using bear-lake's `<table>/<year>/<symbol>.parquet` layout.
+`ml_data_access.describe()` lists what the store holds. `ml_data_access.scan(name, years, symbols)` is the lazy scan under every loader; it opens only the partitions asked for, using bear-lake's `<table>/<year>/<symbol>.parquet` layout.
 
 ## Things to know before trusting a number
 
